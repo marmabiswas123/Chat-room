@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Room</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #121212; color: #e0e0e0; display: flex; height: 100vh; }
+    .left-panel { flex: 3; display: flex; flex-direction: column; }
+    .chat-panel { flex: 1; padding: 1rem; overflow-y: auto; border-bottom: 1px solid #333; }
+    .message { margin-bottom: 0.5rem; }
+    .compose-bar { display: flex; align-items: center; padding: 0.5rem; background: #1e1e1e; }
+    .compose-bar input[type=text] { flex: 1; padding: 0.5rem; margin-right: 0.5rem; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #e0e0e0; }
+    .compose-bar button { margin-right: 0.5rem; padding: 0.5rem; border: none; border-radius: 4px; background: #3a6ea5; color: #fff; cursor: pointer; }
+    .compose-bar button:hover { background: #365f8b; }
+    .right-panel { width: 250px; border-left: 1px solid #333; display: flex; flex-direction: column; }
+    .active-users, .logs { flex: 1; padding: 1rem; overflow-y: auto; }
+    .panel-title { font-weight: bold; margin-bottom: 0.5rem; }
+    .emoji-btn, .attach-btn, .voice-btn { background: none; border: none; color: #e0e0e0; font-size: 1.2rem; cursor: pointer; margin-right: 0.5rem; }
+  </style>
+  <link rel="stylesheet" href="/static/chatStyle.css">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+<body>
+  <div class="left-panel">
+    <div class="chat-panel" id="chatPanel"></div>
+    <div class="compose-bar">
+      <button class="emoji-btn" id="emojiBtn">😊</button>
+      <div id="emojiPickerContainer" style="position: relative;"></div>
+      <button class="attach-btn" id="attachBtn">📎</button>
+      <input type="file" id="fileInput" style="display:none;">
+      <button class="voice-btn" id="voiceBtn">🎤</button>
+      <span id="recordingIndicator" style="display:none; color:red; font-weight:bold;">● Recording...</span>
+      <input type="text" id="messageInput" placeholder="Type a message...">
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="active-users">
+      <div class="panel-title">Active Users</div>
+      <ul id="usersList"></ul>
+    </div>
+    <div class="logs">
+      <div class="panel-title">Logs</div>
+      <ul id="logsList"></ul>
+    </div>
+  </div>
+  <div id="toast" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#222; color:#fff; padding:10px 20px; border-radius:5px; display:none; z-index:999;">Recording sent</div>
+    <!-- socket.io client -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/static/chat.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element/index.js"></script>
+</body>
+</html>

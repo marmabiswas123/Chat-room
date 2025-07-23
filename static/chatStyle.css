@@ -1,0 +1,112 @@
+:root {
+  --border-color: #3a6ea5;
+  --self-bg-start: #0066cc;
+  --self-bg-end: #003399;
+  --other-bg-start: #2d2d2d;
+  --other-bg-end: #1a1a1a;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(25,25,45,0.8), rgba(10,10,25,0.9)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23101025'/%3E%3Cpath d='M0 50 L100 50 M50 0 L50 100' stroke='%231a1a2e' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: cover, 50px 50px;
+}
+
+.message {
+  background: rgba(40,40,40,0.7);
+  border: 2px solid var(--border-color);
+  border-radius: 15px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  max-width: 80%;
+  position: relative;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.message.self {
+  margin-left: auto;
+  background: linear-gradient(135deg, var(--self-bg-start), var(--self-bg-end));
+  color: white;
+  border-bottom-right-radius: 5px;
+}
+
+.message.other {
+  margin-right: auto;
+  background: linear-gradient(135deg, var(--other-bg-start), var(--other-bg-end));
+  color: #f0f0f0;
+  border-bottom-left-radius: 5px;
+}
+
+.message.self::after,
+.message.other::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  width: 0; height: 0;
+}
+
+.message.self::after {
+  right: 20px;
+  border-left: 10px solid var(--self-bg-start);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.message.other::after {
+  left: 20px;
+  border-right: 10px solid var(--other-bg-start);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.chat-panel {
+  background: rgba(50,50,70,0.7);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border-right: 1px solid rgba(90,90,120,0.3);
+}
+
+.right-panel {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-left: 2px solid #0f3460;
+  box-shadow: -3px 0 10px rgba(0,0,0,0.5);
+}
+
+.panel-title {
+  color: #e94560;
+  border-bottom: 1px solid #0f3460;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.active-users, .logs {
+  background: rgba(15,20,40,0.8);
+  border-radius: 8px;
+  border: 1px solid #0f3460;
+  padding: 10px;
+  margin: 5px;
+}
+
+#usersList li::before {
+  content: '●';
+  color: #4ade80;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+#usersList li, #logsList li {
+  padding: 5px;
+  border-bottom: 1px dashed #30475e;
+}
+
+#logsList {
+  color: #a0a0d0;
+  font-size: 0.9em;
+}
+
+.compose-bar {
+  background: rgba(40,40,60,0.7);
+  border-top: 1px solid var(--border-color);
+}

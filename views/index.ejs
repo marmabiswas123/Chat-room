@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Room Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #1e1e1e;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      width: 320px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #cccccc;
+    }
+    input, select, button {
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: #2a2a2a;
+      color: #e0e0e0;
+    }
+    input::placeholder {
+      color: #777;
+    }
+    button {
+      background: #3a6ea5;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #365f8b;
+    }
+    select option {
+      background: #2a2a2a;
+      color: #e0e0e0;
+    }
+    .error {
+      color: red;
+      background-color: #2a0000;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+<body>
+  <div class="container">
+    <h1>Enter Chat Room</h1>
+    <div id="error" class="error"><%= error ? error : '' %></div>
+    <form id="loginForm" method="GET" action="/join">
+      <label for="nickname">Nickname:</label>
+      <input type="text" id="nickname" name="nickname" required minlength="1" maxlength="20" placeholder="Your nickname">
+
+      <label for="color">Choose Font Color:</label>
+      <select id="color" name="color" required>
+        <% colors.forEach(color => { %>
+          <option value="<%= color %>"><%= color.charAt(0).toUpperCase() + color.slice(1) %></option>
+        <% }) %>
+      </select>
+
+      <button type="submit">Join Chat</button>
+    </form>
+  </div>
+
+  <script>
+ form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorDiv.style.display = 'none';
+  const nickname = document.getElementById('nickname').value.trim();
+  const color = document.getElementById('color').value;
+
+  try {
+    const response = await fetch(`/join?nickname=${encodeURIComponent(nickname)}&color=${encodeURIComponent(color)}`);
+    
+    if (response.redirected) {
+      window.location.href = response.url;
+      return;
+    }
+
+    const result = await response.json(); // Try to parse as JSON first
+    if (result.error) {
+      errorDiv.textContent = result.error;
+      errorDiv.style.display = 'block';
+    }
+  } catch (err) {
+    // If JSON parse fails, try HTML error extraction
+    try {
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const serverErrorDiv = doc.querySelector('.error');
+      
+      if (serverErrorDiv && serverErrorDiv.textContent.trim()) {
+        errorDiv.textContent = serverErrorDiv.textContent.trim();
+      } else {
+        errorDiv.textContent = `Server error: ${response.status} ${response.statusText}`;
+      }
+    } catch (parseErr) {
+      errorDiv.textContent = 'Unable to process server response';
+    }
+    errorDiv.style.display = 'block';
+  }
+});
+  </script>
+</body>
+</html>
+
